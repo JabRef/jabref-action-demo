@@ -1,0 +1,47 @@
+name: Check Library Collection
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: List .bib and .bb files
+        id: list
+        working-directory: bibtex-library-collection
+        run: |
+          matrix=$(git ls-files '*.bib' '*.bb' \
+            | sed 's#^#bibtex-library-collection/#' \
+            | jq -R . | jq -cs .)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  check:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        bibfile: ${{ fromJson(needs.discover.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Run jabref-action
+        uses: jabref/jabref-action@main
+        with:
+          bibfile: ${{ matrix.bibfile }}
+          output-format: txt
