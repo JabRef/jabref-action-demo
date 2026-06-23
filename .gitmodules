@@ -1,0 +1,5 @@
+[submodule "bibtex-library-collection"]
+	path = bibtex-library-collection
+	url = https://github.com/JabRef/bibtex-library-collection.git
+	branch = mirror
+	shallow = true
