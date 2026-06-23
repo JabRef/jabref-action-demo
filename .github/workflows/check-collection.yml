@@ -13,7 +13,7 @@ jobs:
       matrix: ${{ steps.list.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: true
 
@@ -36,7 +36,7 @@ jobs:
         bibfile: ${{ fromJson(needs.discover.outputs.matrix) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: true
 
