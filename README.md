@@ -32,7 +32,7 @@ so they appear as annotations on the pull request and the commit. The raw output
 ...
 ```
 
-The default `output-format` is `errorformat`. Other supported values are `csv`, `github-actions` and `txt`.
+The default `output-format` is `errorformat`. Other supported values are `csv`, `github-actions` and `txt`. The `txt` format is actually Markdown — it produces a table, so it renders nicely in the GitHub Actions job summary.
 
 ## Checking a whole library collection
 
@@ -51,7 +51,7 @@ The submodule tracks the collection's flattened `mirror` branch (shallow clone),
 The workflow uses two jobs:
 
 1. **`discover`** — lists every `.bib` and `.bb` file in the submodule and emits them as a JSON array used to build the matrix.
-2. **`check`** — consumes the matrix and runs `jabref-action` once per file. It uses `max-parallel: 1` so the files are checked sequentially, and `fail-fast: false` so one file with inconsistencies does not cancel the rest.
+2. **`check`** — consumes the matrix and runs `jabref-action` once per file. It uses `max-parallel: 1` so the files are checked sequentially, and `fail-fast: false` so one file with inconsistencies does not cancel the rest. It sets `output-format: txt`, so each file's findings render as a Markdown table in the job summary.
 
 > [!NOTE]
 > A GitHub Actions matrix is limited to 256 jobs. If the collection ever contains more than 256 `.bib`/`.bb` files, the matrix has to be split (e.g. batched into multiple jobs).
