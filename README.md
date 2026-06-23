@@ -19,37 +19,20 @@ jobs:
         uses: jabref/jabref-action@main
         with:
           bibfile: Chocolate.bib
+          output-format: github-actions
 ```
 
-Output:
+With `output-format: github-actions`, the consistency findings are emitted as
+[GitHub Actions workflow commands](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-an-error-message),
+so they appear as annotations on the pull request and the commit. The raw output looks like:
 
 ```
-Field Presence Consistency Check Result
-
-| entry type | citation key | Eprint | Groups | Number | Pages | Readstatus | URL |
-| ---------- | ------------ | ------ | ------ | ------ | ----- | ---------- | --- |
-| Article    | Garcia_2018  | -      | -      | o      | -     | -          | -   |
-| Article    | Ding_2006    | -      | -      | o      | -     | -          | -   |
-| Article    | Richard_2017 | -      | ?      | -      | -     | ?          | -   |
-| Article    | Corti_2009   | -      | -      | o      | o     | -          | -   |
-| Article    | Cooper_2007  | -      | -      | o      | o     | -          | -   |
-| Article    | Tokede_2011  | -      | -      | o      | o     | -          | -   |
-| Article    | Keen_2001    | -      | -      | o      | o     | -          | -   |
-| Article    | Katz_2011    | -      | -      | o      | o     | ?          | -   |
-| Article    | Hooper_2012  | -      | -      | o      | o     | ?          | -   |
-| Article    | Tan_2021     | -      | -      | o      | o     | ?          | -   |
-| Article    | Fulton_1969  | o      | -      | o      | o     | -          | o   |
-| Article    | Parker_2006  | -      | ?      | o      | o     | ?          | -   |
-| Article    | Macht_2007   | -      | ?      | o      | o     | ?          | -   |
-| Article    | Scholey_2013 | -      | ?      | o      | o     | ?          | -   |
-| Article    | Di_Renzo_2012 | -      | ?      | o      | o     | ?          | -   |
-
-x | required field is present
-o | optional field is present
-? | unknown field is present
-- | field is absent
-Consistency check completed
+::error file=Chocolate.bib,line=33,col=1,title=Richard_2017:groups::unknown field for entry type Article
+::error file=Chocolate.bib,line=42,col=1,title=Parker_2006:groups::unknown field for entry type Article
+...
 ```
+
+The default `output-format` is `errorformat`. Other supported values are `csv`, `github-actions` and `txt`.
 
 ## Checking a whole library collection
 
