@@ -50,3 +50,25 @@ o | optional field is present
 - | field is absent
 Consistency check completed
 ```
+
+## Checking a whole library collection
+
+The [`check-collection.yml`](.github/workflows/check-collection.yml) workflow runs the action against every `.bib` and `.bb` file in the [JabRef/bibtex-library-collection](https://github.com/JabRef/bibtex-library-collection) repository, which is included here as a git submodule.
+
+The submodule tracks the collection's flattened `mirror` branch (shallow clone), so all bibliography files are available without nested submodules:
+
+```ini
+[submodule "bibtex-library-collection"]
+	path = bibtex-library-collection
+	url = https://github.com/JabRef/bibtex-library-collection.git
+	branch = mirror
+	shallow = true
+```
+
+The workflow uses two jobs:
+
+1. **`discover`** — lists every `.bib` and `.bb` file in the submodule and emits them as a JSON array used to build the matrix.
+2. **`check`** — consumes the matrix and runs `jabref-action` once per file. It uses `max-parallel: 1` so the files are checked sequentially, and `fail-fast: false` so one file with inconsistencies does not cancel the rest.
+
+> [!NOTE]
+> A GitHub Actions matrix is limited to 256 jobs. If the collection ever contains more than 256 `.bib`/`.bb` files, the matrix has to be split (e.g. batched into multiple jobs).
