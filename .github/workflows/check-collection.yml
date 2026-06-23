@@ -44,3 +44,4 @@ jobs:
         uses: jabref/jabref-action@main
         with:
           bibfile: ${{ matrix.bibfile }}
+          output-format: txt
